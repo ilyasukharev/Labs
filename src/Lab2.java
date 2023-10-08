@@ -6,7 +6,7 @@ public class Lab2 implements TableViewer {
     private static final Double D = 0.0;
     private static final Double M = 0.438199546857908;
     private final Random random = new Random();
-    private final TableFrameBuilder tableFrameCreator = new TableFrameBuilder();
+    private final TableFrameBuilder tableFrameCreator = TableFrameBuilder.getInstance();
     private final List<String> columsNames = List.of("N", "MX", "m", "|MX-m|", "DX", "d", "DX-d");
 
 
@@ -44,7 +44,7 @@ public class Lab2 implements TableViewer {
     private double[] generateRandomValues(int count) {
         final var leftBound = 0.1;
         final var rightBound = 0.9;
-        var randomValues = new Random().doubles(count, leftBound, rightBound).toArray();
+        var randomValues = random.doubles(count, leftBound, rightBound).toArray();
         return Arrays.stream(randomValues).map(Math::atan).toArray(); //Math.atan() -> обратная функция распределения
     }
 
