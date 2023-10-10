@@ -3,8 +3,8 @@ import java.util.List;
 import java.util.Random;
 
 public class Lab2 implements TableViewer {
-    private static final Double D = 0.0;
-    private static final Double M = 0.438199546857908;
+    private static final Double D = 0.1945273553918318;
+    private static final Double M = 2.0;
     private final Random random = new Random();
     private final TableFrameBuilder tableFrameCreator = TableFrameBuilder.getInstance();
     private final List<String> columsNames = List.of("N", "MX", "m", "|MX-m|", "DX", "d", "DX-d");
@@ -30,8 +30,8 @@ public class Lab2 implements TableViewer {
         var nums = generateRandomValues(countOfNums);
         var estimateM = calculateEstimateOfM(nums);
         var estimateD = calculateEstimateOfG(nums, estimateM);
-        var differenceBetweenMAndEstimateM = M - estimateM < 0 ? -(M - estimateM) : M - estimateM; //по модулю
-        var differenceBetweenGNadEstimateD = D - estimateD < 0 ? -(D - estimateD) : D - estimateD;
+        var differenceBetweenMAndEstimateM = Math.abs(M - estimateM); //по модулю
+        var differenceBetweenGNadEstimateD = Math.abs(D - estimateD);
         return new Object[]{countOfNums, M, estimateM, differenceBetweenMAndEstimateM, D, estimateD, differenceBetweenGNadEstimateD};
     }
 
@@ -45,7 +45,10 @@ public class Lab2 implements TableViewer {
         final var leftBound = 0.1;
         final var rightBound = 0.9;
         var randomValues = random.doubles(count, leftBound, rightBound).toArray();
-        return Arrays.stream(randomValues).map(Math::atan).toArray(); //Math.atan() -> обратная функция распределения
+        return Arrays.stream(randomValues).map(num -> {
+            var square = Math.sqrt(num);
+            return Math.pow(Math.E, square);
+        }).toArray();
     }
 
     /**
@@ -60,9 +63,9 @@ public class Lab2 implements TableViewer {
      * @return Возвращает оценку математической дисперсии
      */
     private Double calculateEstimateOfG(double[] nums, double estimateM) {
-        var sumOfSquareNums = Arrays.stream(nums).map(Math::sqrt).sum();
+        var sumOfSquareNums = Arrays.stream(nums).map(num -> Math.pow(num, 2)).sum();
         var a = sumOfSquareNums / (nums.length - 1);
-        var b = nums.length * estimateM / (nums.length - 1);
+        var b = nums.length * Math.pow(estimateM, 2) / (nums.length - 1);
         return a - b;
     }
 }
